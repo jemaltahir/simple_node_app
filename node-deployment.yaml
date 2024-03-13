@@ -1,44 +1,39 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: nodeapp-deployment
+  name: nodejs-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: nodeapp
+      app: nodejs-app
   template:
     metadata:
       labels:
-        app: nodeapp
+        app: nodejs-app
     spec:
       containers:
-      - name: nodeapp
-        image: jemalmtahir/nodeapp:v1.0.5
+      - name: nodejs-app
+        image: your-nodejs-app-image  # Replace with your actual Node.js app Docker image
         ports:
-        - containerPort: 3000
+        - containerPort: 3000  # Adjust if your app listens on a different port
         env:
-          - name: MONGODB_SERVICE_HOST
-            value: "mongodb"  
-          - name: MONGODB_SERVICE_PORT
-            value: "27017"  
-          - name: MONGODB_ADMIN_PASSWORD  
-            valueFrom:
-              secretKeyRef:
-                name: mongodb
-                key: database-admin-password
-          - name: MONGODB_DATABASE  
-            valueFrom:
-              secretKeyRef:
-                name: mongodb
-                key: database-name
-          - name: MONGODB_PASSWORD  
-            valueFrom:
-              secretKeyRef:
-                name: mongodb
-                key: database-password
-          - name: MONGODB_USER  
-            valueFrom:
-              secretKeyRef:
-                name: mongodb
-                key: database-user
+        - name: MONGODB_USERNAME  # Assuming these names match the keys in your secret
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-user
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-password
+        - name: MONGODB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-database
+        - name: MONGODB_SERVICE_HOST
+          value: mongodb  # Name of the MongoDB service
+        - name: MONGODB_SERVICE_PORT
+          value: "27017"  # Default MongoDB port

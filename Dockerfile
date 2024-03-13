@@ -1,5 +1,5 @@
 # Use an official Node runtime as the parent image
-FROM node:16
+FROM node:latest
 
 # Set the working directory in the container
 WORKDIR /usr/src/app
@@ -14,4 +14,4 @@ RUN npm install
 EXPOSE 3000
 
 # Run app.js when the container launches
-CMD ["node", "src/app.js"]
+CMD ["node", "app.js"]

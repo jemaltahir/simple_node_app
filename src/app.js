@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-require('dotenv').config(); // Make sure to install dotenv using npm install dotenv
+require('dotenv').config(); // Load environment variables from .env file in local development
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -12,12 +12,10 @@ app.use(logger('dev'));
 app.use(express.json()); // For parsing application/json
 
 // MongoDB connection URI from environment variables for better security
-const mongoURI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_SERVICE_HOST}:${process.env.MONGODB_SERVICE_PORT}/${process.env.MONGODB_DATABASE}`;
-
-
+const mongoURI = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_SERVICE_HOST}:${process.env.MONGODB_SERVICE_PORT}/${process.env.MONGODB_DATABASE}?authSource=admin`;
 
 // Enhanced Mongoose connection setup for production
-mongoose.connect(mongoURI)
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => {
   console.error('Error connecting to MongoDB:', err);
@@ -29,6 +27,7 @@ const todoSchema = new mongoose.Schema({
   title: { type: String, required: true },
   completed: { type: Boolean, default: false },
 }, { timestamps: true }); // Adding timestamps for creation and updates
+
 const Todo = mongoose.model('Todo', todoSchema);
 
 // Define API endpoints

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongodb
+  template:
+    metadata:
+      labels:
+        app: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: 'bitnami/mongodb:latest'
+        ports:
+        - containerPort: 27017
+        env:
+          - name: MONGODB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-credentials
+                key: MONGODB_USERNAME
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-credentials
+                key: MONGODB_PASSWORD
+          - name: MONGODB_DATABASE
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-credentials
+                key: MONGODB_DATABASE
+          - name: MONGODB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongodb-credentials
+                key: MONGODB_ROOT_PASSWORD
+          - name: MONGODB_SERVICE_HOST
+            value: "mongodb"
+          - name: MONGODB_SERVICE_PORT
+            value: "27017"

@@ -1,0 +1,101 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: mongodb-persistent
+  annotations:
+    description: MongoDB database service, with persistent storage.
+    tags: database,mongodb
+objects:
+- kind: Secret
+  apiVersion: v1
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}-secret
+  stringData:
+    mongodb-root-password: ${MONGODB_ADMIN_PASSWORD}
+    mongodb-password: ${MONGODB_PASSWORD}
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}
+  spec:
+    ports:
+    - port: 27017
+      targetPort: 27017
+    selector:
+      app: ${DATABASE_SERVICE_NAME}
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}-db
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: ${VOLUME_CAPACITY_DB}
+- kind: Deployment
+  apiVersion: apps/v1
+  metadata:
+    name: ${DATABASE_SERVICE_NAME}
+  spec:
+    replicas: 1
+    selector:
+      matchLabels:
+        app: ${DATABASE_SERVICE_NAME}
+    template:
+      metadata:
+        labels:
+          app: ${DATABASE_SERVICE_NAME}
+      spec:
+        containers:
+        - name: mongodb
+          image: 'bitnami/mongodb:latest'
+          ports:
+          - containerPort: 27017
+          env:
+          - name: MONGODB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${DATABASE_SERVICE_NAME}-secret
+                key: mongodb-root-password
+          - name: MONGODB_USERNAME
+            value: ${MONGODB_USER}
+          - name: MONGODB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: ${DATABASE_SERVICE_NAME}-secret
+                key: mongodb-password
+          - name: MONGODB_DATABASE
+            value: ${MONGODB_DATABASE}
+          volumeMounts:
+          - mountPath: /bitnami/mongodb
+            name: ${DATABASE_SERVICE_NAME}-data
+        volumes:
+        - name: ${DATABASE_SERVICE_NAME}-data
+          persistentVolumeClaim:
+            claimName: ${DATABASE_SERVICE_NAME}-db
+parameters:
+- name: DATABASE_SERVICE_NAME
+  displayName: Database Service Name
+  value: mongodb
+  required: true
+- name: MONGODB_USER
+  displayName: MongoDB User
+  value: 'user1'  # default user name
+  required: true
+- name: MONGODB_PASSWORD
+  displayName: MongoDB Password
+  value: 'user1'  # default password
+  required: true
+- name: MONGODB_ADMIN_PASSWORD
+  displayName: MongoDB Admin Password
+  value: 'adminpass'  # default admin password
+  required: true
+- name: MONGODB_DATABASE
+  displayName: MongoDB Database Name
+  value: 'sampledb'  # default database name
+  required: true
+- name: VOLUME_CAPACITY_DB
+  displayName: Data Volume Capacity
+  value: '1Gi'  # default volume capacity
+  required: true
