@@ -1,5 +1,5 @@
 # Use an official Node runtime as the parent image
-FROM node:latest
+FROM node:12
 
 # Set the working directory in the container
 WORKDIR /usr/src/app

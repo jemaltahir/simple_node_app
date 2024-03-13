@@ -17,10 +17,7 @@ const mongoURI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PA
 
 
 // Enhanced Mongoose connection setup for production
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(mongoURI)
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => {
   console.error('Error connecting to MongoDB:', err);
