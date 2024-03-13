@@ -18,27 +18,28 @@ spec:
         ports:
         - containerPort: 27017
         env:
-          - name: MONGODB_USERNAME
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-credentials
-                key: MONGODB_USERNAME
-          - name: MONGODB_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-credentials
-                key: MONGODB_PASSWORD
-          - name: MONGODB_DATABASE
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-credentials
-                key: MONGODB_DATABASE
-          - name: MONGODB_ROOT_PASSWORD
-            valueFrom:
-              secretKeyRef:
-                name: mongodb-credentials
-                key: MONGODB_ROOT_PASSWORD
-          - name: MONGODB_SERVICE_HOST
-            value: "mongodb"
-          - name: MONGODB_SERVICE_PORT
-            value: "27017"
+        - name: MONGODB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-user  # corrected from MONGODB_USERNAME to mongodb-user
+        - name: MONGODB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-password  # corrected from MONGODB_PASSWORD to mongodb-password
+        - name: MONGODB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-database  # corrected from MONGODB_DATABASE to mongodb-database
+        - name: MONGODB_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongodb-secret
+              key: mongodb-root-password  # Make sure this matches the new line you added in the secret
+        - name: MONGODB_SERVICE_HOST
+          value: "mongodb"  # Assuming your MongoDB service is named 'mongodb'
+        - name: MONGODB_SERVICE_PORT
+          value: "27017"  # Default MongoDB port, change if yours is different
+

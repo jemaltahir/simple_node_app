@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: nodejs-app
-        image: jemalmtahir/nodeapp:v1.0.6
+        image: jemalmtahir/nodeapp:v1.1.0
         ports:
         - containerPort: 3000  # Adjust if your app listens on a different port
         env:

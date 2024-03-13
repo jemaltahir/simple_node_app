@@ -15,7 +15,7 @@ app.use(express.json()); // For parsing application/json
 const mongoURI = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_SERVICE_HOST}:${process.env.MONGODB_SERVICE_PORT}/${process.env.MONGODB_DATABASE}?authSource=admin`;
 
 // Enhanced Mongoose connection setup for production
-mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(mongoURI)
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => {
   console.error('Error connecting to MongoDB:', err);
