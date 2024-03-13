@@ -20,8 +20,6 @@ const mongoURI = `mongodb://${process.env.MONGODB_USER}:${process.env.MONGODB_PA
 mongoose.connect(mongoURI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true, // Helps ensure that Mongoose uses MongoDB’s newer index creation
-  useFindAndModify: false, // For handling deprecation warnings
 })
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => {
