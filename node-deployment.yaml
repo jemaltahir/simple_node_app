@@ -18,7 +18,7 @@ spec:
         ports:
         - containerPort: 3000
         env:
-           - name: MONGODB_SERVICE_HOST
+          - name: MONGODB_SERVICE_HOST
             value: "mongodb"  
           - name: MONGODB_SERVICE_PORT
             value: "27017"  
