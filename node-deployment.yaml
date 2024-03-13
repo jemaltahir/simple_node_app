@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodeapp-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodeapp
+  template:
+    metadata:
+      labels:
+        app: nodeapp
+    spec:
+      containers:
+      - name: nodeapp
+        image: jemalmtahir/node-app:v1.0.0
+        ports:
+        - containerPort: 3000
+        env:
+           - name: MONGODB_SERVICE_HOST
+            value: "mongodb"  
+          - name: MONGODB_SERVICE_PORT
+            value: "27017"  
+          - name: MONGODB_ADMIN_PASSWORD  
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: database-admin-password
+          - name: MONGODB_DATABASE  
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: database-name
+          - name: MONGODB_PASSWORD  
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: database-password
+          - name: MONGODB_USER  
+            valueFrom:
+              secretKeyRef:
+                name: mongodb
+                key: database-user
